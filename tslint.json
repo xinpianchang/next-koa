@@ -1,0 +1,22 @@
+{
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rules": {
+    "interface-name": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-shadowed-variable": false,
+    "no-empty-interface": false,
+    "variable-name": false,
+    "no-empty": false,
+    "no-console": {
+      "severity": "warning",
+      "options":[
+        "log",
+        "debug",
+        "time",
+        "timeEnd",
+        "trace"
+      ]
+    }
+  }
+}

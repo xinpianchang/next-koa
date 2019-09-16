@@ -1,0 +1,5 @@
+.next
+lib
+node_modules
+yarn.lock
+/lib
