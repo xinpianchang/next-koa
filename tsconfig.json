@@ -1,36 +1,26 @@
 {
   "compilerOptions": {
     "target": "es2017",
+    "module": "commonjs",
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "rootDir": "src",
+    "declaration": true,
+    "skipLibCheck": true,
+    "strict": true,
     "lib": [
       "dom",
       "dom.iterable",
-      "es2017"
+      "esnext"
     ],
-    "module": "commonjs",
-    "jsx": "react",
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noEmit": false,
-    "declaration": true,
-    "removeComments": true,
-    "outDir": "lib",
-    "rootDir": "src",
-    "strict": true
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "node_modules",
-    "lib",
-    "examples",
-    "*.test.ts",
-    "*.test.tsx"
+    "node_modules"
   ]
 }

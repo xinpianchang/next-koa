@@ -45,10 +45,10 @@ export interface PublicConfig {}
 export interface ServerConfig {}
 
 export interface NextConfig {
-  useFileSystemPublicRoutes?: boolean;
-  publicRuntimeConfig?: PublicConfig;
-  runtimeConfig?: ServerConfig;
-  assetPrefix?: string;
+  useFileSystemPublicRoutes?: boolean
+  publicRuntimeConfig?: PublicConfig
+  runtimeConfig?: ServerConfig
+  assetPrefix?: string
 }
 
 export interface KoaNextStaticOptions {
@@ -152,7 +152,7 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
 
       // make next
       await next()
-      
+
       if (!isResponded(ctx)) {
         if (useFileSystemPublicRoutes) {
           await ctx.handleNext()
@@ -238,7 +238,13 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
   }
 
   function isResponded(ctx: Context) {
-    return ctx.headerSent || !ctx.writable || ctx.respond === false || !!ctx.response._explicitStatus || ctx.response.status !== 404
+    return (
+      ctx.headerSent ||
+      !ctx.writable ||
+      ctx.respond === false ||
+      !!ctx.response._explicitStatus ||
+      ctx.response.status !== 404
+    )
   }
 
   function isResSent(ctx: Context) {
@@ -367,3 +373,6 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
     })
   }
 }
+
+// Support commonjs `require('koa-next')`
+module.exports = KoaNext

@@ -20,4 +20,8 @@ function Deferred(this: IDerferred | undefined) {
   })
 }
 
-export default Deferred as DeferConstructor
+const derferred = Deferred as DeferConstructor
+export default derferred
+
+// Support commonjs `require('koa-next/deferred')`
+module.exports = derferred

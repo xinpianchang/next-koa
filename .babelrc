@@ -1,0 +1,22 @@
+{
+  "presets": [
+    "@babel/preset-typescript",
+    [
+      "@babel/preset-env",
+      {
+        "modules": "cjs",
+        "targets": {
+          "node": "8.3"
+        },
+        "loose": true,
+        "exclude": ["transform-typeof-symbol"]
+      }
+    ],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "babel-plugin-dynamic-import-node",
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
+  ],
+  "ignore": ["**/*.d.ts"]
+}
