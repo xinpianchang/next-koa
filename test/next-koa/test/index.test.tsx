@@ -1,5 +1,5 @@
 import path from 'path'
-import { launchKoaApp, findPort, renderViaHTTP, killApp, fetchViaHTTP } from '../../next-koa-test-utils'
+import { launchKoaApp, findPort, renderViaHTTP, killApp, fetchViaHTTP, renderJSONViaHTTP } from '../../next-koa-test-utils'
 
 const serverEntry = path.resolve(__dirname, '..', 'server')
 
@@ -32,6 +32,11 @@ describe('start next-koa server', () => {
     const json = await response.json()
     expect(json.title).toBe('hello world')
     expect(json.homepage).toBe('/')
+  })
+
+  test('API test', async () => {
+    const json = await renderJSONViaHTTP(appPort, '/api/hello')
+    expect(json).toEqual({ hello: 'world' })
   })
 })
 

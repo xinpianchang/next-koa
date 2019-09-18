@@ -1,5 +1,5 @@
 import spawn from 'cross-spawn'
-import { NextCommandDevOptions, RunDev } from './next-test-utils'
+import { NextCommandDevOptions, RunDev, renderViaHTTP } from './next-test-utils'
 
 export * from './next-test-utils'
 
@@ -14,6 +14,10 @@ export function launchKoaApp(entry: string, port: number) {
       TS_NODE_FILES: 'true'
     }
   })
+}
+
+export function renderJSONViaHTTP(appPort: number, pathname: string, query?: any) {
+  return renderViaHTTP(appPort, pathname, query).then(JSON.parse)
 }
 
 export function runNodeCommand<S extends boolean = false>(argv: Array<string | number>, stdOut?: S, opts: NodeCommandOptions = {}): RunDev<S> {

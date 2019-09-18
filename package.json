@@ -29,8 +29,13 @@
   "license": "MIT",
   "homepage": "https://github.com/xinpianchang/next-koa#readme",
   "files": [
-    "lib/**/*",
-    "types/**/*"
+    "dist",
+    "derferred.d.ts",
+    "derferred.js",
+    "getstate.d.ts",
+    "getstate.js",
+    "redirect.d.ts",
+    "redirect.js"
   ],
   "devDependencies": {
     "@babel/cli": "^7.6.0",

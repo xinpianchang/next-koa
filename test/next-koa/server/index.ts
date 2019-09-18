@@ -12,7 +12,6 @@ const next = NextKoa({
 })
 
 app.use(next.middleware)
-
 app.use((ctx, next) => {
   ctx.state.homepage = '/'
   if (ctx.path === '/') {
