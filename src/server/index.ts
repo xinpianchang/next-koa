@@ -88,7 +88,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
   // middleware which handles all matched static files of next.js directly in koa router
   const {
-    extentions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.map'],
+    extentions = ['.js', '.css', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.map', '.json'],
     allowOriginExtentions = ['.js', '.css'],
     allowOriginRegex = [/.*/],
   } = options
@@ -123,11 +123,11 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
       if (ctx.path.match(/^\/(static|_next)\//)) {
         const ext = extname(ctx.path).replace(/\?.*$/, '')
         const originalUrl = ctx.originalUrl
-        const isOnDemandEntriesPing = !isProd && originalUrl.indexOf('/_next/on-demand-entries-ping/') === 0
+        const isDevHMR = !isProd && originalUrl.match(/^\/_next\/(on-demand-entries-ping|webpack-hmr)/)
         const isStaticImages = originalUrl.indexOf('/_next/static/images/') === 0
 
-        if (extentions.includes(ext) || isOnDemandEntriesPing) {
-          if (assetPrefix.match(/^https?:\/\//) && (allowOriginExtentions.includes(ext) || isOnDemandEntriesPing)) {
+        if (extentions.includes(ext) || isDevHMR) {
+          if (assetPrefix.match(/^https?:\/\//) && (allowOriginExtentions.includes(ext) || isDevHMR)) {
             // 增加跨域支持
             ctx.vary('Origin')
             const origin = ctx.get('Origin')
