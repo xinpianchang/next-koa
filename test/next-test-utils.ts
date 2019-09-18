@@ -7,12 +7,8 @@ import getPort from 'get-port'
 import spawn from 'cross-spawn'
 import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs'
 import treeKill from 'tree-kill'
-
-// `next` here is the symlink in `test/node_modules/next` which points to the root directory.
-// This is done so that requiring from `next` works.
-// The reason we don't import the relative path `../../dist/<etc>` is that it would lead to inconsistent module singletons
 import { ChildProcess, SpawnOptions } from 'child_process'
-import Server from 'next-server/dist/server/next-server'
+import Server from 'next/dist/next-server/server/next-server'
 
 export function initNextServerScript (
   scriptPath: string,

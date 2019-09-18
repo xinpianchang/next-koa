@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import KoaNext from '../../../src'
+import KoaNext from '../../../'
 import http from 'http'
 import path from 'path'
 
@@ -12,6 +12,14 @@ const next = KoaNext({
 })
 
 app.use(next.middleware)
+
+app.use((ctx, next) => {
+  ctx.state.homepage = '/'
+  if (ctx.path === '/') {
+    return ctx.render('/', { title: 'hello world' })
+  }
+  return next()
+})
 
 const server = http.createServer(app.callback())
 const port = process.env.PORT || 3000

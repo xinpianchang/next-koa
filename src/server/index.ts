@@ -1,11 +1,11 @@
 import next from 'next'
 import { format, parse, UrlWithParsedQuery } from 'url'
-import Server from 'next-server/dist/server/next-server'
 import { Middleware, BaseContext, Context } from 'koa'
 import { extname } from 'path'
 import { ParsedUrlQuery } from 'querystring'
 import delegates from 'delegates'
-import deferred from './deferred'
+import deferred from '../client/deferred'
+import Server from 'next/dist/next-server/server/next-server'
 
 declare module 'http' {
   interface IncomingMessage {
@@ -38,7 +38,7 @@ declare module 'koa' {
 }
 
 const isProd = process.env.NODE_ENV === 'production'
-const featureSymbol = Symbol('koa-next')
+const featureSymbol = Symbol('next-koa')
 
 export interface PublicConfig {}
 
@@ -206,7 +206,7 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
     }
   }
 
-  type Func = (ctx: Context, query: any, parsedUrl?: UrlWithParsedQuery) => any
+  type Func = (ctx: Context, query: any, parsedUrl: UrlWithParsedQuery, state: any) => any
 
   async function fixCtxUrl<T extends {} = any>(ctx: Context, data: T, parsed?: UrlWithParsedQuery | Func, fn?: Func) {
     let func: Func | undefined
@@ -226,7 +226,7 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
 
     ctx.state = ctx.res.locals = { ...ctx.state, ...data }
     try {
-      return await func(ctx, { ...ctx.query }, parsedUrl)
+      return await func(ctx, { ...ctx.query }, parsedUrl, ctx.state)
     } finally {
       ctx.url = originalUrl
     }
@@ -267,12 +267,12 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
 
   // ender View 并响应到 Response
   function render(this: Context, view: string, data?: any, parsed?: UrlWithParsedQuery) {
-    return fixCtxUrl(this, data, parsed, async (ctx, query, parsedUrl) => {
+    return fixCtxUrl(this, data, parsed, async (ctx, query, parsedUrl, state) => {
       if (!ctx.response._explicitStatus) {
         ctx.status = 200
       }
       if (isNextFetch(ctx)) {
-        ctx.body = data
+        ctx.body = state
       } else {
         await app.render(ctx.req, ctx.res, view, query, parsedUrl)
         if (isResSent(ctx)) {
@@ -300,7 +300,7 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
   // render _error 并响应到 Response
   function renderError(this: Context, error: Error | null, data: any = {}, parsed?: UrlWithParsedQuery) {
     const err = error as any
-    return fixCtxUrl(this, data, parsed, async (ctx, query) => {
+    return fixCtxUrl(this, data, parsed, async (ctx, query, _parsedUrl, state) => {
       if (!ctx.response._explicitStatus) {
         ctx.status = (err && (err.status || err.statusCode)) || 500
       }
@@ -311,10 +311,10 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
               ((err.expose || options.dev) && (err.message || err.name)) || ctx.message || 'Server Internal Error',
             code: ((err.expose || options.dev) && err.code) || undefined,
             stack: (options.dev && err.stack) || undefined,
-            ...data,
+            ...state,
           }
         } else {
-          ctx.body = data
+          ctx.body = state
         }
       } else {
         await app.renderError(error, ctx.req, ctx.res, '/_error', query)
@@ -357,7 +357,11 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
     if (isNextFetch(ctx)) {
       ctx.status = 200
       ctx.set('Content-Location', realUrl)
-      ctx.body = parsedUrl
+      if (back) {
+        ctx.body = 'back'
+      } else {
+        ctx.body = parsedUrl
+      }
     } else {
       ctx.redirect(realUrl)
     }
@@ -373,6 +377,3 @@ export default function KoaNext(options: KoaNextOptions = {}): NextApp {
     })
   }
 }
-
-// Support commonjs `require('koa-next')`
-module.exports = KoaNext

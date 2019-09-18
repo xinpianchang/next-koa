@@ -1,4 +1,3 @@
-import path from 'path'
 import spawn from 'cross-spawn'
 import { NextCommandDevOptions, RunDev } from './next-test-utils'
 

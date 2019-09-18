@@ -8,6 +8,7 @@
     "no-empty-interface": false,
     "variable-name": false,
     "no-empty": false,
+    "member-access": false,
     "no-console": {
       "severity": "warning",
       "options":[
