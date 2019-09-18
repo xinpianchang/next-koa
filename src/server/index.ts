@@ -51,13 +51,13 @@ export interface NextConfig {
   assetPrefix?: string
 }
 
-export interface KoaNextStaticOptions {
+export interface NextKoaStaticOptions {
   extentions?: string[]
   allowOriginExtentions?: string[]
   allowOriginRegex?: RegExp[]
 }
 
-export interface KoaNextOptions extends KoaNextStaticOptions {
+export interface NextKoaOptions extends NextKoaStaticOptions {
   name?: string
   dev?: boolean
   quiet?: boolean
@@ -79,7 +79,7 @@ export type RedirectUrl = UrlWithParsedQuery & { back?: boolean; asPath?: string
  * 2. render data can be read through fetchState(ctx)
  * 3. support fetchState inside getInitialProps when rendered on client side
  */
-export default function KoaNext(options: KoaNextOptions = {}): NextApp {
+export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   const opt = {
     dev: !isProd,
     quiet: !isProd,

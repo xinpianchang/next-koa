@@ -5,14 +5,14 @@
 ``` javascript
 // server/index.js
 
-const KoaNext = require('next-koa')
+const NextKoa = require('next-koa')
 const Koa = require('koa')
 const Router = require('koa2-router')
 const path = require('path')
 
 const app = new Koa()
 const router = new Router()
-const nextApp = KoaNext({
+const nextApp = NextKoa({
   dev: process.env.NODE_ENV !== 'production',
   dir: path.resolve(__dirname, '..')
 })

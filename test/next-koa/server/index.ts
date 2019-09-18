@@ -1,12 +1,12 @@
 import Koa from 'koa'
-import KoaNext from '../../../'
+import NextKoa from '../../../'
 import http from 'http'
 import path from 'path'
 
 const dir = path.resolve(__dirname, '..')
 
 const app = new Koa()
-const next = KoaNext({
+const next = NextKoa({
   dev: process.env.NODE_ENV !== 'production',
   dir,
 })

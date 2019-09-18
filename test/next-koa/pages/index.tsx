@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import getInitState from '../../../getState'
+import getInitState from '../../../getstate'
 
 export default class extends React.Component<any, any> {
   static getInitialProps = getInitState
