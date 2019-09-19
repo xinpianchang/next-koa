@@ -40,7 +40,13 @@ declare module 'koa' {
 const isProd = process.env.NODE_ENV === 'production'
 const featureSymbol = Symbol('next-koa')
 
-export interface PublicConfig {}
+export interface NextKoaConfig {
+  nextFetch?: 'param' | 'header'
+}
+
+export interface PublicConfig {
+  nextKoaConfig?: NextKoaConfig;
+}
 
 export interface ServerConfig {}
 
@@ -99,9 +105,12 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   // webpack build or read config
   // app.prepare().then(() => def.resolve(app), def.reject)
   const {
-    nextConfig: { assetPrefix = '', useFileSystemPublicRoutes = true },
+    nextConfig: { assetPrefix = '', useFileSystemPublicRoutes = true, publicRuntimeConfig = {} },
     buildId,
   } = app
+
+  const { nextKoaConfig = {} } = publicRuntimeConfig
+  const { nextFetch = 'header' } = nextKoaConfig
 
   const deferApp = deferred<void>()
   app.prepare().then(deferApp.resolve)
@@ -233,8 +242,13 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   }
 
   function isNextFetch(ctx: Context) {
-    ctx.vary('X-Requested-With')
-    return ctx.get('X-Requested-With') === 'Next-Fetch' && ['HEAD', 'GET'].includes(ctx.method)
+    if (nextFetch === 'header') {
+      ctx.vary('X-Requested-With')
+      return ctx.get('X-Requested-With') === 'Next-Fetch' && ['HEAD', 'GET'].includes(ctx.method)
+    } else if (nextFetch === 'param') {
+      return ctx.query.next_fetch && ['HEAD', 'GET'].includes(ctx.method)
+    }
+    return false
   }
 
   function isResponded(ctx: Context) {

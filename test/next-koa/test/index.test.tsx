@@ -1,6 +1,8 @@
 import path from 'path'
 import { launchKoaApp, findPort, renderViaHTTP, killApp, fetchViaHTTP, renderJSONViaHTTP } from '../../next-koa-test-utils'
+import nextConfig from '../next.config'
 
+const { publicRuntimeConfig: { nextKoaConfig: { nextFetch = 'header' } = {} } = {} } = nextConfig
 const serverEntry = path.resolve(__dirname, '..', 'server')
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000 * 60 * 2
@@ -24,11 +26,19 @@ describe('start next-koa server', () => {
   })
 
   test('CSR render with a next-fetch request', async () => {
-    const response = await fetchViaHTTP(appPort, '/', {}, {
-      headers: {
-        'X-Requested-With': 'Next-Fetch'
-      }
-    })
+    expect(nextFetch).toMatch(/(header|param)/)
+
+    let response
+    
+    if (nextFetch === 'header') {
+      response = await fetchViaHTTP(appPort, '/', {}, {
+        headers: {
+          'X-Requested-With': 'Next-Fetch'
+        }
+      })
+    } else if (nextFetch === 'param') {
+      response = await fetchViaHTTP(appPort, '/?next_fetch=json')
+    }
     const json = await response.json()
     expect(json.title).toBe('hello world')
     expect(json.homepage).toBe('/')

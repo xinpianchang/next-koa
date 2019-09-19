@@ -35,7 +35,9 @@
     "getstate.d.ts",
     "getstate.js",
     "redirect.d.ts",
-    "redirect.js"
+    "redirect.js",
+    "config.d.ts",
+    "config.js"
   ],
   "devDependencies": {
     "@babel/cli": "^7.6.0",
