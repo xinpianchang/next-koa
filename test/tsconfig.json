@@ -18,10 +18,10 @@
     ]
   },
   "include": [
-    "server"
+    "next-koa/server"
   ],
   "exclude": [
-    "node_modules",
-    ".next"
+    "/node_modules/",
+    "/.next/"
   ]
 }

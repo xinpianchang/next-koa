@@ -44,7 +44,7 @@ describe('start next-koa server', () => {
     expect(json.homepage).toBe('/')
   })
 
-  test('API test', async () => {
+  test('API test for method /api/hello', async () => {
     const json = await renderJSONViaHTTP(appPort, '/api/hello')
     expect(json).toEqual({ hello: 'world' })
   })

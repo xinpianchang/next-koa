@@ -2,6 +2,7 @@ import Koa from 'koa'
 import NextKoa from '../../../'
 import http from 'http'
 import path from 'path'
+import Router from 'koa2-router'
 
 const dir = path.resolve(__dirname, '..')
 
@@ -12,13 +13,15 @@ const next = NextKoa({
 })
 
 app.use(next.middleware)
+
+const router = new Router()
 app.use((ctx, next) => {
   ctx.state.homepage = '/'
-  if (ctx.path === '/') {
-    return ctx.render('/', { title: 'hello world' })
-  }
   return next()
 })
+
+router.get('/', ctx => ctx.render('/', { title: 'hello world' }))
+app.use(router)
 
 const server = http.createServer(app.callback())
 const port = process.env.PORT || 3000

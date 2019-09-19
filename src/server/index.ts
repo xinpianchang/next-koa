@@ -41,10 +41,25 @@ const isProd = process.env.NODE_ENV === 'production'
 const featureSymbol = Symbol('next-koa')
 
 export interface NextKoaConfig {
+  /**
+   * how to fetch the json state of the page\
+   * `param`: use ?next_fetch=json to fetch\
+   * `header`: use X-Requested-With header to fetch\
+   * `undefined`: will indicate to use `header` instead
+   */
   nextFetch?: 'param' | 'header'
 }
 
 export interface PublicConfig {
+  /**
+   * the next-koa public config\
+   * use below method to fetch config under nextjs pages
+   * ```
+   * import nextKoaConfig from 'next-koa/config'
+   * // ... at some where
+   * const config = nextKoaConfig()
+   * ```
+   */
   nextKoaConfig?: NextKoaConfig;
 }
 

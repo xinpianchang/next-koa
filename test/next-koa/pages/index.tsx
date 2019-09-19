@@ -15,6 +15,9 @@ export default class extends React.Component<any, any> {
         <Link href={this.props.homepage}>
           <a>homepage</a>
         </Link>
+        <Link href='/about'>
+          <a>about us</a>
+        </Link>
       </div>
     </>
   }
