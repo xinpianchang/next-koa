@@ -38,8 +38,8 @@
     "redirect.js",
     "config.d.ts",
     "config.js",
-    "App.d.ts",
-    "App.js"
+    "app.d.ts",
+    "app.js"
   ],
   "devDependencies": {
     "@babel/cli": "^7.6.0",
