@@ -25,10 +25,10 @@ const layoutMap = new Map<
  * const LoginPage: React.FC = ...
  * export default withLayout(Layout)(LoginPage)
  * ```
- * and then extends your next App from `next-koa/App`
+ * and then extends your next App from `next-koa/app`
  * ```
  * // pages/_app.tsx
- * import App from 'next-koa/App'
+ * import App from 'next-koa/app'
  * export default class MyApp extends App {
  *   ...
  * }
