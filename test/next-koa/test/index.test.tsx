@@ -48,6 +48,11 @@ describe('start next-koa server', () => {
     const json = await renderJSONViaHTTP(appPort, '/api/hello')
     expect(json).toEqual({ hello: 'world' })
   })
+
+  test('about page withLayout test', async () => {
+    const result = await renderViaHTTP(appPort, '/about')
+    expect(result).toContain('<div style="font-size:20px">')
+  })
 })
 
 // describe('Index', () => {
