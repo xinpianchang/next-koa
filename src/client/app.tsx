@@ -39,7 +39,7 @@ const layoutMap = new Map<
  * // layout/LayoutModel.ts
  * // provider all dynamic layout HOC reference
  * import dynamic from 'next/dynamic'
- * import { withLayout } from 'next-koa/App'
+ * import { withLayout } from 'next-koa/app'
  * export const withLoginLayout = withLayout(dynamic(() => import('./layout/LoginLayout')))
  * ```
  * then you can import that HOC
