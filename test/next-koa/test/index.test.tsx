@@ -1,9 +1,8 @@
 import path from 'path'
 import { launchKoaApp, findPort, renderViaHTTP, killApp, fetchViaHTTP, renderJSONViaHTTP } from '../../next-koa-test-utils'
-import nextConfig from '../next.config'
 
-const { publicRuntimeConfig: { nextKoaConfig: { nextFetch = 'header' } = {} } = {} } = nextConfig
 const serverEntry = path.resolve(__dirname, '..', 'server')
+const NEXT_DATA_PATTERN = /<script id="__NEXT_DATA__" [^>]*>(.*?)<\/script>/
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000 * 60 * 2
 
@@ -11,18 +10,26 @@ describe('start next-koa server', () => {
 
   let appPort: number
   let server: any
+  let homepageHTML: string
+  let nextConfig: any
+  let nextFetch: string
+  
 
   beforeAll(async () => {
     appPort = await findPort()
     server = await launchKoaApp(serverEntry, appPort)
+    homepageHTML = await renderViaHTTP(appPort, '/')
   })
 
   afterAll(() => killApp(server))
 
   test('SSR render with the expected DOM', async () => {
-    const result = await renderViaHTTP(appPort, '/')
-    expect(result).toContain('<title>hello world</title>')
-    expect(result).toContain('<a href="/"')
+    expect(homepageHTML).toContain('<title>hello world</title>')
+    expect(homepageHTML).toContain('<a href="/"')
+    expect(homepageHTML).toMatch(NEXT_DATA_PATTERN)
+    nextConfig = JSON.parse(homepageHTML.match(NEXT_DATA_PATTERN)[1].trim())
+    const { runtimeConfig: { nextKoaConfig: { nextFetch: _nextFetch = 'header' } = {} } = {} } = nextConfig
+    nextFetch = _nextFetch
   })
 
   test('CSR render with a next-fetch request', async () => {
@@ -53,6 +60,8 @@ describe('start next-koa server', () => {
     const result = await renderViaHTTP(appPort, '/about')
     expect(result).toContain('<div style="font-size:20px">')
   })
+
+  test.skip('wait a minute for browser test', done => setTimeout(done, 60000))
 })
 
 // describe('Index', () => {

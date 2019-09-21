@@ -22,13 +22,14 @@
     "koa",
     "koa2",
     "next",
-    "next.js",
+    "nextjs",
     "next-koa"
   ],
   "author": "tangye",
   "license": "MIT",
   "homepage": "https://github.com/xinpianchang/next-koa#readme",
   "files": [
+    "plugin.js",
     "dist",
     "derferred.d.ts",
     "derferred.js",
@@ -39,7 +40,9 @@
     "config.d.ts",
     "config.js",
     "app.d.ts",
-    "app.js"
+    "app.js",
+    "layout.d.ts",
+    "layout.js"
   ],
   "devDependencies": {
     "@babel/cli": "^7.6.0",
@@ -83,7 +86,8 @@
     "wd": "^1.11.4"
   },
   "dependencies": {
-    "delegates": "^1.0.0"
+    "delegates": "^1.0.0",
+    "next-transpile-modules": "^2.3.1"
   },
   "engines": {
     "node": ">= 8.0.0"

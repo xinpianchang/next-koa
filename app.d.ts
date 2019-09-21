@@ -1,2 +1,2 @@
-export * from './dist/client/app'
-export { default } from './dist/client/app'
+export * from './dist/pages/app'
+export { default } from './dist/pages/app'

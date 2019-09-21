@@ -1,7 +1,7 @@
 # Koa2 & Next.js hydration packages
 
 # Usage
-1. Firstly setup a koa server entry
+* Firstly setup a koa server entry
 ``` javascript
 // server/index.js
 
@@ -40,7 +40,7 @@ router.get('/about', ctx => ctx.render('about', { title: 'about us' }))
 app.listen(3000)
 ```
 
-2. Then write your own next.js pages
+* Then write your own next.js pages
 ```jsx
 // pages/about.tsx
 
@@ -57,7 +57,7 @@ export default class AboutPage extends React.Component {
     return stata
   }
   render() {
-    <>
+    return <>
       <Head>
         <title>{this.props.title}</title>
       </Head>
@@ -68,5 +68,54 @@ export default class AboutPage extends React.Component {
   }
 }
 
+```
+
+* If you want next.js layout feature, just like this
+```jsx
+// pages/_app.tsx
+impot App from 'next-koa/app'
+
+export default CustomApp extends App {
+}
+```
+
+* in order to make `next-koa/app` being packed by webpack,\
+we should use this plugin to include this module 
+```js
+// next.config.js
+const withNextKoaPlugin = require('next-koa/plugin')
+module.exports = withNextKoaPlugin({
+  // ...config
+})
+```
+
+* Now we can export a Layout
+```tsx
+// layout/index.tsx
+import React from 'react'
+
+export default ({ children: }: { children: React.ReactNode }) => {
+  return <section className='layout'>
+    <nav>
+      <ul>
+        {...}
+      </ul>
+    </nav>
+    <main className='container'>
+      {children}
+    </main>
+  </section>
+}
+```
+
+* then we can use the layout above to decorate any pages
+```tsx
+// pages/index.tsx
+import React from 'react'
+import { withLayout } from 'next-koa/layout'
+
+const IndexPage: React.FC<any> = //...
+
+export default withLayout(IndexPage)
 ```
 

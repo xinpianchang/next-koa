@@ -1,5 +1,4 @@
 import React from 'react'
-import App from 'next/app'
 
 export interface LayoutProps {
   children: React.ReactNode
@@ -7,16 +6,16 @@ export interface LayoutProps {
 
 const layoutMap = new Map<
   React.ComponentType<any>,
-  React.ComponentType<LayoutProps>
+  Array<React.ComponentType<LayoutProps>>
 >()
 
 /**
  * ### Make a layout HOC for next page
- * this tool can setup multiple layouts shared\
+ * this hoc function can setup multiple layouts shared\
  * between pages, the layout won't be unmount\
  * when pages are switched between each other
  * 
- * you can do this as following steps\
+ * you can do this as following steps:\
  * first create your page with HOC
  * ```
  * // pages/Login.tsx
@@ -33,13 +32,21 @@ const layoutMap = new Map<
  *   ...
  * }
  * ```
+ * and make sure your next.config.js is using `next-koa/plugin`
+ * ```
+ * // next.config.js
+ * const withNextKoaPlugin = require('next-koa/plugin')
+ * module.exports = withNextKoaPlugin({
+ *   // ...config
+ * })
+ * ```
  * if the layout Component is too big, and you want to import\
  * it on demond, you can create a LayoutModel.ts like below
  * ```
  * // layout/LayoutModel.ts
  * // provider all dynamic layout HOC reference
  * import dynamic from 'next/dynamic'
- * import { withLayout } from 'next-koa/app'
+ * import { withLayout } from 'next-koa/layout'
  * export const withLoginLayout = withLayout(dynamic(() => import('./layout/LoginLayout')))
  * ```
  * then you can import that HOC
@@ -49,12 +56,19 @@ const layoutMap = new Map<
  * ...
  * export default withLoginLayout(LoginPage)
  * ```
+ * * be sure that layout HOC is decorated exactly upon the exported pages
+ * * withLayout can receive multiple layouts as a layout stack
  * @param layout the Layout component
  */
-export function withLayout(layout: React.ComponentType<LayoutProps>) {
+export function withLayout(...layout: Array<React.ComponentType<LayoutProps>>) {
   // tslint:disable-next-line: only-arrow-functions
   return function <C>(page: React.ComponentType<C>) {
-    layoutMap.set(page, layout)
+    const layouts = layoutMap.get(page)
+    if (layouts) {
+      layouts.push(...layout)
+    } else {
+      layoutMap.set(page, layout)
+    }
     return page
   }
 }
@@ -65,21 +79,14 @@ export interface PageLayoutProps<T = any> {
 }
 
 const Layout: React.FC<PageLayoutProps> = ({ component: Component, pageProps }) => {
-  const ComponentLayout = layoutMap.get(Component)
+  const layouts = layoutMap.get(Component)
   const children = <Component {...pageProps} />
-  if (ComponentLayout) {
-    return <ComponentLayout>
+  if (layouts && layouts.length) {
+    return layouts.reduce((children, ComponentLayout) => <ComponentLayout>
       {children}
-    </ComponentLayout>
+    </ComponentLayout>, children)
   }
   return children
 }
 
-export default class NextKoaApp<P = {}, CP = {}, S = {}> extends App<P, CP, S> {
-  render() {
-    return <Layout
-      component={this.props.Component}
-      pageProps={this.props.pageProps}
-    />
-  }
-}
+export default Layout
