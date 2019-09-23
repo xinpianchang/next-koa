@@ -93,8 +93,9 @@ module.exports = withNextKoaPlugin({
 ```tsx
 // layout/index.tsx
 import React from 'react'
+import { withLayout } from 'next-koa/layout'
 
-export default ({ children: }: { children: React.ReactNode }) => {
+export default withLayout(({ children: }: { children: React.ReactNode }) => {
   return <section className='layout'>
     <nav>
       <ul>
@@ -105,17 +106,17 @@ export default ({ children: }: { children: React.ReactNode }) => {
       {children}
     </main>
   </section>
-}
+})
 ```
 
 * then we can use the layout above to decorate any pages
 ```tsx
 // pages/index.tsx
 import React from 'react'
-import { withLayout } from 'next-koa/layout'
+import withCustomLayout from '../layout'
 
 const IndexPage: React.FC<any> = //...
 
-export default withLayout(IndexPage)
+export default withCustomLayout(IndexPage)
 ```
 
