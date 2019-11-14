@@ -68,7 +68,7 @@ export interface ServerConfig {}
 export interface NextConfig {
   useFileSystemPublicRoutes?: boolean
   publicRuntimeConfig?: PublicConfig
-  runtimeConfig?: ServerConfig
+  serverRuntimeConfig?: ServerConfig
   assetPrefix?: string
 }
 
@@ -120,9 +120,16 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   // webpack build or read config
   // app.prepare().then(() => def.resolve(app), def.reject)
   const {
-    nextConfig: { assetPrefix = '', useFileSystemPublicRoutes = true, publicRuntimeConfig = {} },
+    nextConfig,
     buildId,
   } = app
+
+  // fix runtimeConfig
+  if ('runtimeConfig' in nextConfig as any) {
+    nextConfig.serverRuntimeConfig = (nextConfig as any).runtimeConfig as ServerConfig
+  }
+
+  const { assetPrefix = '', useFileSystemPublicRoutes = true, publicRuntimeConfig = {} } = nextConfig
 
   const { nextKoaConfig = {} } = publicRuntimeConfig
   const { nextFetch = 'header' } = nextKoaConfig

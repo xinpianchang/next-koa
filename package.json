@@ -71,7 +71,7 @@
     "jest-environment-node": "^24.9.0",
     "koa": "^2.8.1",
     "koa2-router": "^1.2.3",
-    "next": "^9.0.6",
+    "next": "^9.1.0",
     "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
     "querystring": "^0.2.0",
