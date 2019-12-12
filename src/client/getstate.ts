@@ -5,11 +5,14 @@ import nextKoaConfig from './config'
 import { NextUrl } from './redirect'
 
 export interface FetchOptions extends RequestInit {
-  ssr?: boolean;
+  ssr?: boolean
   onError?: <T>(body: any, response: Response) => T | Promise<T>
 }
 
-export default async function getInitialState<T = any>({ asPath, res }: NextPageContext, opt: FetchOptions = { ssr: true }): Promise<T> {
+export default async function getInitialState<T = any>(
+  { asPath, res }: NextPageContext,
+  opt: FetchOptions = { ssr: true },
+): Promise<T> {
   const { ssr = true, onError, ...options } = opt
   let localState = {}
   const { nextFetch = 'header' } = nextKoaConfig()
@@ -63,7 +66,7 @@ export default async function getInitialState<T = any>({ asPath, res }: NextPage
       throw error
     }
 
-    const { status } = response;
+    const { status } = response
     if (status >= 400) {
       if (onError) {
         localState = onError(json, response)
@@ -87,7 +90,7 @@ export default async function getInitialState<T = any>({ asPath, res }: NextPage
 function parseJson(text: string) {
   try {
     return JSON.parse(text)
-  } catch(_e) {
+  } catch (_e) {
     return text
   }
 }

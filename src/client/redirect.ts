@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { NextPageContext } from 'next'
 
 export type NextUrl = NodeUrl & {
-  asPath?: string;
+  asPath?: string
 }
 
 type Url = string | NextUrl

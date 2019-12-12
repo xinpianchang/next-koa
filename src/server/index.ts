@@ -60,7 +60,7 @@ export interface PublicConfig {
    * const config = nextKoaConfig()
    * ```
    */
-  nextKoaConfig?: NextKoaConfig;
+  nextKoaConfig?: NextKoaConfig
 }
 
 export interface ServerConfig {}
@@ -91,7 +91,7 @@ export interface NextApp extends Server {
   middleware: Middleware<any, Context>
 }
 
-export type RedirectUrl = UrlWithParsedQuery & { back?: boolean; asPath?: string } | string
+export type RedirectUrl = (UrlWithParsedQuery & { back?: boolean; asPath?: string }) | string
 
 /**
  * a next.js middleware for koa
@@ -119,13 +119,10 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
   // webpack build or read config
   // app.prepare().then(() => def.resolve(app), def.reject)
-  const {
-    nextConfig,
-    buildId,
-  } = app
+  const { nextConfig, buildId } = app
 
   // fix runtimeConfig
-  if ('runtimeConfig' in nextConfig as any) {
+  if (('runtimeConfig' in nextConfig) as any) {
     nextConfig.serverRuntimeConfig = (nextConfig as any).runtimeConfig as ServerConfig
   }
 

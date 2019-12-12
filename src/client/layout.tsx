@@ -4,23 +4,20 @@ export interface LayoutProps {
   children: React.ReactNode
 }
 
-const layoutMap = new Map<
-  React.ComponentType<any>,
-  Array<React.ComponentType<LayoutProps>>
->()
+const layoutMap = new Map<React.ComponentType<any>, Array<React.ComponentType<LayoutProps>>>()
 
 /**
  * ### Make a layout HOC for next page
  * this hoc function can setup multiple layouts shared\
  * between pages, the layout won't be unmount\
  * when pages are switched between each other
- * 
+ *
  * you can do this as following steps:\
  * first create your page with HOC
  * ```
  * // pages/Login.tsx
  * import Layout from './layout/LoginLayout'
- * 
+ *
  * const LoginPage: React.FC = ...
  * export default withLayout(Layout)(LoginPage)
  * ```
@@ -62,7 +59,7 @@ const layoutMap = new Map<
  */
 export function withLayout(...layout: Array<React.ComponentType<LayoutProps>>) {
   // tslint:disable-next-line: only-arrow-functions
-  return function <C>(page: React.ComponentType<C>) {
+  return function<C>(page: React.ComponentType<C>) {
     const layouts = layoutMap.get(page)
     if (layouts) {
       layouts.push(...layout)
@@ -82,9 +79,7 @@ const Layout: React.FC<PageLayoutProps> = ({ component: Component, pageProps }) 
   const layouts = layoutMap.get(Component)
   const children = <Component {...pageProps} />
   if (layouts && layouts.length) {
-    return layouts.reduce((children, ComponentLayout) => <ComponentLayout>
-      {children}
-    </ComponentLayout>, children)
+    return layouts.reduce((children, ComponentLayout) => <ComponentLayout>{children}</ComponentLayout>, children)
   }
   return children
 }
