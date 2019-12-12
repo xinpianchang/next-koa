@@ -1,6 +1,6 @@
 import next from 'next'
 import { format, parse, UrlWithParsedQuery } from 'url'
-import { Middleware, Context, ExtendableContext } from 'koa'
+import { Middleware, Context } from 'koa'
 import { extname } from 'path'
 import { ParsedUrlQuery } from 'querystring'
 import delegates from 'delegates'
@@ -9,10 +9,10 @@ import Server from 'next/dist/next-server/server/next-server'
 
 declare module 'http' {
   interface IncomingMessage {
-    context: ExtendableContext
+    context: Context
   }
   interface ServerResponse {
-    context: ExtendableContext
+    context: Context
     locals: any
   }
 }
