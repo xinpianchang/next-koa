@@ -22,8 +22,10 @@ export default function redirect(ctx: NextPageContext, url: Url): void {
 
   if (typeof window === 'undefined') {
     if (ctx.res) {
-      ctx.res.writeHead(302, { Location: formattedUrl })
-      ctx.res.end()
+      ctx.res.context.redirect(formattedUrl)
+      ctx.res.context.respond = true
+      // mark a finished response
+      ctx.res.finished = true
     }
   } else {
     if (parsedUrl.host || parsedUrl.protocol) {

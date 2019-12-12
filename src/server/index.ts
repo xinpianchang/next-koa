@@ -1,6 +1,6 @@
 import next from 'next'
 import { format, parse, UrlWithParsedQuery } from 'url'
-import { Middleware, BaseContext, Context } from 'koa'
+import { Middleware, Context, ExtendableContext } from 'koa'
 import { extname } from 'path'
 import { ParsedUrlQuery } from 'querystring'
 import delegates from 'delegates'
@@ -9,10 +9,10 @@ import Server from 'next/dist/next-server/server/next-server'
 
 declare module 'http' {
   interface IncomingMessage {
-    context: BaseContext
+    context: ExtendableContext
   }
   interface ServerResponse {
-    context: BaseContext
+    context: ExtendableContext
     locals: any
   }
 }
@@ -408,7 +408,12 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
     return fixCtxUrl(this, {}, parsed, async (ctx, _query, parsedUrl) => {
       await handle(ctx.req, ctx.res, parsedUrl)
       if (isResSent(ctx)) {
-        ctx.respond = false
+        if (typeof ctx.respond === 'undefined') {
+          ctx.respond = false
+        } else if (ctx.respond === true) {
+          // fake finished response, so we need to recover the finished
+          ctx.res.finished = false
+        }
       }
     })
   }
