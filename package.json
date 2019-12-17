@@ -5,7 +5,7 @@
   "main": "dist/server/index.js",
   "types": "dist/server/index.d.ts",
   "scripts": {
-    "test": "jest",
+    "test": "HEADLESS=true jest",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "build": "npm run build:types && npm run build:js",
@@ -62,6 +62,7 @@
     "babel-plugin-add-module-exports": "^1.0.2",
     "babel-plugin-dynamic-import-node": "^2.3.0",
     "browserstack-local": "^1.4.2",
+    "chromedriver": "^79.0.0",
     "cross-spawn": "^7.0.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
@@ -83,6 +84,8 @@
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3",
+    "wait-for": "^2.1.1",
+    "wait-port": "^0.2.7",
     "wd": "^1.11.4"
   },
   "dependencies": {
@@ -94,6 +97,6 @@
   },
   "peerDependencies": {
     "koa": "^2.8.1",
-    "next": "^9.0.6"
+    "next": "^9.1.0"
   }
 }

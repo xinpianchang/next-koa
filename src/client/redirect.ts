@@ -8,7 +8,7 @@ export type NextUrl = NodeUrl & {
 
 type Url = string | NextUrl
 
-export default function redirect(ctx: NextPageContext, url: Url): void {
+export default function redirect(ctx: NextPageContext, url: Url): never {
   let parsedUrl: Url
   if (typeof url === 'string') {
     parsedUrl = parse(url)
@@ -27,11 +27,20 @@ export default function redirect(ctx: NextPageContext, url: Url): void {
       // mark a finished response
       ctx.res.finished = true
     }
+    // quickly interrupt the current getInitialProps
+    // blank error will make SSR aborted without error
+    throw ''
   } else {
     if (parsedUrl.host || parsedUrl.protocol) {
       window.location.replace(formattedUrl)
     } else {
       Router.replace(parsed, as)
     }
+    // quickly intterrupt the current getInitialProps
+    // a cancelled error will make CSR aborted without error
+    const err: any = new Error('AbortError')
+    err.name = 'AbortError'
+    err.cancelled = true
+    throw err
   }
 }

@@ -1,5 +1,7 @@
 import path from 'path'
 import { launchKoaApp, findPort, renderViaHTTP, killApp, fetchViaHTTP, renderJSONViaHTTP } from '../../next-koa-test-utils'
+import webdriver from '../../next-webdriver'
+import { waitFor } from '../../next-test-utils'
 
 const serverEntry = path.resolve(__dirname, '..', 'server')
 const NEXT_DATA_PATTERN = /<script id="__NEXT_DATA__" [^>]*>(.*?)<\/script>/
@@ -13,7 +15,6 @@ describe('start next-koa server', () => {
   let homepageHTML: string
   let nextConfig: any
   let nextFetch: string
-  
 
   beforeAll(async () => {
     appPort = await findPort()
@@ -61,9 +62,23 @@ describe('start next-koa server', () => {
     expect(result).toContain('<div style="font-size:20px">')
   })
 
+  test('redirect test in SSR', async () => {
+    let result = await renderViaHTTP(appPort, '/redirect')
+    expect(result).toContain('Redirecting to')
+  })
+
+  test('redirect test in CSR', async () => {
+    const browser = await webdriver(appPort, '/about')
+    await browser.elementById('redirect').click()
+    await waitFor(1000)
+    const title = await browser.title()
+    expect(title).toBe('hello world')
+  })
+
   test.skip('wait a minute for browser test', done => setTimeout(done, 60000))
 })
 
+/** jest enzyme */
 // describe('Index', () => {
 //   let appPort: number
 //   let server: any

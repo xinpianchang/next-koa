@@ -254,7 +254,15 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
     ctx.state = ctx.res.locals = { ...ctx.state, ...data }
     try {
-      return await func(ctx, { ...ctx.query }, parsedUrl, ctx.state)
+      await func(ctx, { ...ctx.query }, parsedUrl, ctx.state)
+      if (isResSent(ctx)) {
+        if (typeof ctx.respond === 'undefined') {
+          ctx.respond = false
+        } else if (ctx.respond === true) {
+          // fake finished response, so we need to recover the finished
+          ctx.res.finished = false
+        }
+      }
     } finally {
       ctx.url = originalUrl
     }
@@ -286,46 +294,42 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
   // render 到 HTML string
   function renderToHTML(this: Context, view: string, data: any = {}) {
-    return fixCtxUrl(this, data, ({ req, res }: Context, query: ParsedUrlQuery) =>
-      app.renderToHTML(req, res, view, query),
-    )
+    return fixCtxUrl(this, data, (
+      { req, res }: Context,
+      query: ParsedUrlQuery,
+    ) => app.renderToHTML(req, res, view, query))
   }
 
   // ender _error 到 HTML string
   function renderErrorToHTML(this: Context, err: any, data: any = {}) {
-    return fixCtxUrl(this, data, ({ req, res }: Context, query: ParsedUrlQuery) =>
-      app.renderErrorToHTML(err, req, res, '/_error', query),
-    )
+    return fixCtxUrl(this, data, (
+      { req, res }: Context,
+      query: ParsedUrlQuery,
+    ) => app.renderErrorToHTML(err, req, res, '/_error', query))
   }
 
   // ender View 并响应到 Response
   function render(this: Context, view: string, data?: any, parsed?: UrlWithParsedQuery) {
-    return fixCtxUrl(this, data, parsed, async (ctx, query, parsedUrl, state) => {
+    return fixCtxUrl(this, data, parsed, (ctx, query, parsedUrl, state) => {
       if (!ctx.response._explicitStatus) {
         ctx.status = 200
       }
       if (isNextFetch(ctx)) {
         ctx.body = state
       } else {
-        await app.render(ctx.req, ctx.res, view, query, parsedUrl)
-        if (isResSent(ctx)) {
-          ctx.respond = false
-        }
+        return app.render(ctx.req, ctx.res, view, query, parsedUrl)
       }
     })
   }
 
   // render a 404 using _error view
   function render404(this: Context, parsed?: UrlWithParsedQuery) {
-    return fixCtxUrl(this, {}, parsed, async (ctx, _query, parsedUrl) => {
+    return fixCtxUrl(this, {}, parsed, (ctx, _query, parsedUrl) => {
       ctx.status = 404
       if (isNextFetch(ctx)) {
         ctx.body = { message: 'Not Found' }
       } else {
-        await app.render404(ctx.req, ctx.res, parsedUrl)
-        if (isResSent(ctx)) {
-          ctx.respond = false
-        }
+        return app.render404(ctx.req, ctx.res, parsedUrl)
       }
     })
   }
@@ -333,7 +337,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   // render _error 并响应到 Response
   function renderError(this: Context, error: Error | null, data: any = {}, parsed?: UrlWithParsedQuery) {
     const err = error as any
-    return fixCtxUrl(this, data, parsed, async (ctx, query, _parsedUrl, state) => {
+    return fixCtxUrl(this, data, parsed, (ctx, query, _parsedUrl, state) => {
       if (!ctx.response._explicitStatus) {
         ctx.status = (err && (err.status || err.statusCode)) || 500
       }
@@ -350,10 +354,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
           ctx.body = state
         }
       } else {
-        await app.renderError(error, ctx.req, ctx.res, '/_error', query)
-        if (isResSent(ctx)) {
-          ctx.respond = false
-        }
+        return app.renderError(error, ctx.req, ctx.res, '/_error', query)
       }
     })
   }
@@ -402,16 +403,10 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
   // handle all NextJs logic, like static files serve or routes resolution
   function handleNext(this: Context, parsed?: UrlWithParsedQuery) {
-    return fixCtxUrl(this, {}, parsed, async (ctx, _query, parsedUrl) => {
-      await handle(ctx.req, ctx.res, parsedUrl)
-      if (isResSent(ctx)) {
-        if (typeof ctx.respond === 'undefined') {
-          ctx.respond = false
-        } else if (ctx.respond === true) {
-          // fake finished response, so we need to recover the finished
-          ctx.res.finished = false
-        }
-      }
-    })
+    return fixCtxUrl(this, {}, parsed, (
+      ctx,
+      _query,
+      parsedUrl,
+    ) => handle(ctx.req, ctx.res, parsedUrl))
   }
 }
