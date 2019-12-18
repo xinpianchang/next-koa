@@ -73,9 +73,9 @@ export default class AboutPage extends React.Component {
 * If you want next.js layout feature, just like this
 ```jsx
 // pages/_app.tsx
-impot App from 'next-koa/app'
+import App from 'next-koa/app'
 
-export default CustomApp extends App {
+export default class CustomApp extends App {
 }
 ```
 
