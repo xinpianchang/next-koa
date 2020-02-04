@@ -1,9 +1,9 @@
 import { NextPage } from 'next'
 import redirect from '../../../redirect'
 
-const Redirect: NextPage = () => <div>redirect</div>
+const Redirect: NextPage<{}, void> = () => <div>redirect</div>
 
-Redirect.getInitialProps = ctx => {
+Redirect.getInitialProps = async ctx => {
   redirect(ctx, '/')
 }
 

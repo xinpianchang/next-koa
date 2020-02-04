@@ -4,7 +4,11 @@ export interface LayoutProps {
   children: React.ReactNode
 }
 
-const layoutMap = new Map<React.ComponentType<any>, Array<React.ComponentType<LayoutProps>>>()
+const LAYOUT_SYM = Symbol('next-layout')
+
+type LayoutComponentType<P = any> = React.ComponentType<P> & {
+  [LAYOUT_SYM]?: Array<React.ComponentType<LayoutProps>>
+}
 
 /**
  * ### Make a layout HOC for next page
@@ -60,14 +64,20 @@ const layoutMap = new Map<React.ComponentType<any>, Array<React.ComponentType<La
 export function withLayout(...layout: Array<React.ComponentType<LayoutProps>>) {
   // tslint:disable-next-line: only-arrow-functions
   return function<C>(page: React.ComponentType<C>) {
-    const layouts = layoutMap.get(page)
+    const layoutPage = page as LayoutComponentType<C>
+    let layouts = layoutPage[LAYOUT_SYM]
     if (layouts) {
       layouts.push(...layout)
     } else {
-      layoutMap.set(page, layout)
+      layouts = layout
     }
+    layoutPage[LAYOUT_SYM] = unique(layouts)
     return page
   }
+}
+
+function unique<T>(arr: T[]) {
+  return arr.filter((item, index, self) => index === self.findIndex(t => t === item))
 }
 
 export interface PageLayoutProps<T = any> {
@@ -76,7 +86,8 @@ export interface PageLayoutProps<T = any> {
 }
 
 const Layout: React.FC<PageLayoutProps> = ({ component: Component, pageProps }) => {
-  const layouts = layoutMap.get(Component)
+  const layoutPage = Component as LayoutComponentType
+  const layouts = layoutPage[LAYOUT_SYM]
   const children = <Component {...pageProps} />
   if (layouts && layouts.length) {
     return layouts.reduce((children, ComponentLayout) => <ComponentLayout>{children}</ComponentLayout>, children)
