@@ -261,6 +261,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
         } else if (ctx.respond === true) {
           // fake finished response, so we need to recover the finished
           ctx.res.finished = false
+          Object.defineProperty(ctx.res, 'statusCode', { value: ctx.res.statusCode, writable: true })
         }
       }
     } finally {

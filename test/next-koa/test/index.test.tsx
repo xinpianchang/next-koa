@@ -63,7 +63,11 @@ describe('start next-koa server', () => {
   })
 
   test('redirect test in SSR', async () => {
-    let result = await renderViaHTTP(appPort, '/redirect')
+    const response = await fetchViaHTTP(appPort, '/redirect', {}, {
+      redirect: 'manual',
+    })
+    const result = await response.text()
+    expect(response.status).toBe(302)
     expect(result).toContain('Redirecting to')
   })
 
