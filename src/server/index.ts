@@ -18,7 +18,7 @@ declare module 'http' {
 }
 
 declare module 'koa' {
-  interface BaseContext extends NextRequest {
+  interface DefaultContext extends NextRequest {
     render: (view: string, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
     renderError: (error: Error | null, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
     render404: (parsed?: UrlWithParsedQuery) => Promise<any>

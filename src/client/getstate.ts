@@ -30,7 +30,7 @@ export default async function getInitialState<T = any>(
       }
     } else if (nextFetch === 'param') {
       const parsed = parse(fetchPath, true)
-      parsed.search = null
+      parsed.search = undefined
       parsed.query.next_fetch = 'json'
       fetchPath = format(parsed)
     }

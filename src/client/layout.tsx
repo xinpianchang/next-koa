@@ -7,7 +7,7 @@ export interface LayoutProps {
 const LAYOUT_SYM = Symbol('next-layout')
 
 type LayoutComponentType<P = any> = React.ComponentType<P> & {
-  [LAYOUT_SYM]?: Array<React.ComponentType<LayoutProps>>
+  [LAYOUT_SYM]?: React.ComponentType<LayoutProps>[]
 }
 
 /**
@@ -61,7 +61,7 @@ type LayoutComponentType<P = any> = React.ComponentType<P> & {
  * * withLayout can receive multiple layouts as a layout stack
  * @param layout the Layout component
  */
-export function withLayout(...layout: Array<React.ComponentType<LayoutProps>>) {
+export function withLayout(...layout: React.ComponentType<LayoutProps>[]) {
   // tslint:disable-next-line: only-arrow-functions
   return function<C>(page: React.ComponentType<C>) {
     const layoutPage = page as LayoutComponentType<C>
