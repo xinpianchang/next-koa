@@ -95,7 +95,7 @@ module.exports = withNextKoaPlugin({
 import React from 'react'
 import { withLayout } from 'next-koa/layout'
 
-export default withLayout(({ children: }: { children: React.ReactNode }) => {
+export default withLayout(({ children }: { children: React.ReactNode }) => {
   return <section className='layout'>
     <nav>
       <ul>
