@@ -1,8 +1,8 @@
-import { format, parse, Url as NodeUrl } from 'url'
+import { format, parse, UrlObject } from 'url'
 import Router from 'next/router'
 import { NextPageContext } from 'next'
 
-export type NextUrl = NodeUrl & {
+export type NextUrl = UrlObject & {
   asPath?: string
 }
 
