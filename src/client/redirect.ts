@@ -38,9 +38,9 @@ export default function redirect(ctx: NextPageContext, url: Url): never {
     })
   } else {
     if (parsedUrl.host || parsedUrl.protocol) {
-      window.location.replace(formattedUrl)
+      window.location.href = formattedUrl
     } else {
-      Router.replace(parsed, as)
+      Router.push(parsed, as)
     }
   }
   // quickly intterrupt the current getInitialProps

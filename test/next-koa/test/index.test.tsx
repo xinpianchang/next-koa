@@ -75,8 +75,17 @@ describe('start next-koa server', () => {
     const browser = await webdriver(appPort, '/about')
     await browser.elementById('redirect').click()
     await waitFor(1000)
-    const title = await browser.title()
-    expect(title).toBe('hello world')
+    expect(await browser.title()).toBe('hello world')
+    // redirect back to about page
+    await browser.back()
+    expect(await browser.title()).toBe('about')
+    // link to external website
+    await browser.elementById('redirect2').click()
+    await waitFor(1000)
+    expect(await browser.title()).toBe('hello world')
+    // redirect back to about page
+    await browser.back()
+    expect(await browser.title()).toBe('about')
   })
 
   test.skip('wait a minute for browser test', done => setTimeout(done, 60000))
