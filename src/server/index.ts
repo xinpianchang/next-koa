@@ -1,5 +1,5 @@
 import next from 'next'
-import { format, parse, UrlWithParsedQuery } from 'url'
+import { format, parse, UrlWithParsedQuery, UrlObject } from 'url'
 import { Middleware, Context } from 'koa'
 import { extname } from 'path'
 import { ParsedUrlQuery } from 'querystring'
@@ -91,7 +91,7 @@ export interface NextApp extends Server {
   middleware: Middleware<any, Context>
 }
 
-export type RedirectUrl = (UrlWithParsedQuery & { back?: boolean; asPath?: string }) | string
+export type RedirectUrl = (UrlObject & { back?: boolean; asPath?: string }) | string
 
 /**
  * a next.js middleware for koa
@@ -374,7 +374,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
     }
 
     if (typeof parsedUrl === 'string') {
-      parsedUrl = parse(url as string, true)
+      parsedUrl = parse(parsedUrl, true)
     }
 
     if (back) {
@@ -382,7 +382,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
     }
 
     const { asPath, pathname } = parsedUrl
-    const realParsedUrl: UrlWithParsedQuery = {
+    const realParsedUrl: UrlObject = {
       ...parsedUrl,
       pathname: asPath || pathname,
     }

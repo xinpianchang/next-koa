@@ -20,6 +20,8 @@ app.use((ctx, next) => {
   return next()
 })
 
+router.get('/ssr_redirect_about', ctx => ctx.renderRedirect('/about'))
+
 router.get('/', ctx => ctx.render('/', { title: 'hello world' }))
 app.use(router)
 
