@@ -1,5 +1,7 @@
 # Koa2 & Next.js hydration packages
 
+  [![NPM Version][npm-image]][npm-url]
+
 # Usage
 * Firstly setup a koa server entry
 ``` javascript
@@ -120,3 +122,5 @@ const IndexPage: React.FC<any> = //...
 export default withCustomLayout(IndexPage)
 ```
 
+[npm-image]: https://img.shields.io/npm/v/next-koa.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/next-koa
