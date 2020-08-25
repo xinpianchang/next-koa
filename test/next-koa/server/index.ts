@@ -4,6 +4,8 @@ import http from 'http'
 import path from 'path'
 import Router from 'koa2-router'
 
+import { IncomingMessage, ServerResponse } from 'http'
+
 const dir = path.resolve(__dirname, '..')
 
 const app = new Koa()
@@ -30,3 +32,10 @@ const port = process.env.PORT || 3000
 server.listen(process.env.PORT || 3000, () => {
   console.info('server is ready on port', port)
 })
+
+
+const callback = app.callback()
+
+export default async (req: IncomingMessage, res: ServerResponse) => {
+  callback(req, res)
+}
