@@ -2,7 +2,7 @@ import next from 'next'
 import { format, parse, UrlWithParsedQuery, UrlObject } from 'url'
 import { Middleware, Context } from 'koa'
 import { extname } from 'path'
-import { ParsedUrlQuery } from 'querystring'
+import { ParsedUrlQuery, parse as parseQuery } from 'querystring'
 import delegates from 'delegates'
 import deferred from '../client/deferred'
 import Server from 'next/dist/next-server/server/next-server'
@@ -253,6 +253,11 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
     ctx.url = parsedUrl.path || ''
 
     ctx.state = ctx.res.locals = { ...ctx.state, ...data }
+
+    const refererQuery = parse(ctx.request.header.referer || '').query || ''
+    const params = parseQuery(refererQuery)
+    ctx.query = params
+
     try {
       await func(ctx, { ...ctx.query }, parsedUrl, ctx.state)
       if (isResSent(ctx)) {
