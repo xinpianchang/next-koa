@@ -254,10 +254,6 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
     ctx.state = ctx.res.locals = { ...ctx.state, ...data }
 
-    const refererQuery = parse(ctx.request.header.referer || '').query || ''
-    const params = parseQuery(refererQuery)
-    ctx.query = params
-
     try {
       await func(ctx, { ...ctx.query }, parsedUrl, ctx.state)
       if (isResSent(ctx)) {
