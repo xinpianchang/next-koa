@@ -2,7 +2,7 @@ import next from 'next'
 import { format, parse, UrlWithParsedQuery, UrlObject } from 'url'
 import { Middleware, Context } from 'koa'
 import { extname } from 'path'
-import { ParsedUrlQuery, parse as parseQuery } from 'querystring'
+import { ParsedUrlQuery } from 'querystring'
 import delegates from 'delegates'
 import deferred from '../client/deferred'
 import Server from 'next/dist/next-server/server/next-server'
@@ -19,7 +19,7 @@ declare module 'http' {
 
 declare module 'koa' {
   interface DefaultContext extends NextRequest {
-    render: (view: string, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
+    render: (view: string, params?: object, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
     renderError: (error: Error | null, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
     render404: (parsed?: UrlWithParsedQuery) => Promise<any>
     renderToHTML: (view: string, data?: any) => Promise<any>
@@ -254,6 +254,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
 
     ctx.state = ctx.res.locals = { ...ctx.state, ...data }
 
+
     try {
       await func(ctx, { ...ctx.query }, parsedUrl, ctx.state)
       if (isResSent(ctx)) {
@@ -311,7 +312,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   }
 
   // ender View 并响应到 Response
-  function render(this: Context, view: string, data?: any, parsed?: UrlWithParsedQuery) {
+  function render(this: Context, view: string, params?: any, data?: any, parsed?: UrlWithParsedQuery) {
     return fixCtxUrl(this, data, parsed, (ctx, query, parsedUrl, state) => {
       if (!ctx.response._explicitStatus) {
         ctx.status = 200
@@ -319,7 +320,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
       if (isNextFetch(ctx)) {
         ctx.body = state
       } else {
-        return app.render(ctx.req, ctx.res, view, query, parsedUrl)
+        return app.render(ctx.req, ctx.res, view, Object.assign(query, params), parsedUrl)
       }
     })
   }
