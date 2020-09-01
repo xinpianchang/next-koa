@@ -1,5 +1,7 @@
 import React from 'react'
 
-export default (props: { children: React.ReactNode }) => <div style={{ fontSize: 20 }}>
+const Layout = (props: { children: React.ReactNode }) => <div style={{ fontSize: 20 }}>
   {props.children}
 </div>
+
+export default Layout
