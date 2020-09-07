@@ -1,0 +1,19 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "inline-react-svg",
+    "inline-json-import",
+    [
+      "module-resolver", {
+        "root": ["./"],
+        "alias": {
+          "^@/(.*)$": "./src/\\1",
+          "^server/(.*)$": "./server/\\1"
+        },
+        "extensions": [".tsx", ".ts"]
+      }
+    ]
+  ],
+  "ignore": ["**/*.d.ts"]
+}

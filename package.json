@@ -1,10 +1,11 @@
 {
   "name": "next-koa",
-  "version": "2.0.3",
+  "version": "2.2.0",
   "description": "A koa middleware and some tools for next.js",
   "main": "dist/server/index.js",
   "types": "dist/server/index.d.ts",
   "scripts": {
+    "dev": "node -r ./test/next-koa/server/register ./node_modules/.bin/micro-dev ./test/next-koa/server/index.ts -p 8008 --silent --watch ./test/next-koa/server",
     "test": "HEADLESS=true jest",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
@@ -45,6 +46,10 @@
     "layout.js"
   ],
   "devDependencies": {
+    "@babel/runtime-corejs2": "^7.8.7",
+    "micro": "^9.3.4",
+    "micro-dev": "^3.0.0",
+    "@babel/register": "^7.8.6",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.6",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
@@ -73,7 +78,7 @@
     "jest-environment-node": "^25.1.0",
     "koa": "^2.11.0",
     "koa2-router": "^2.0.1",
-    "next": "^9.2.2",
+    "next": "9.5.2",
     "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
     "querystring": "^0.2.0",
@@ -91,13 +96,13 @@
   },
   "dependencies": {
     "delegates": "^1.0.0",
-    "next-transpile-modules": "^3.0.2"
+    "next-transpile-modules": "4.1.0"
   },
   "engines": {
     "node": ">= 8.0.0"
   },
   "peerDependencies": {
     "koa": "^2.11.0",
-    "next": "^9.2.2"
+    "next": "9.5.2"
   }
 }
