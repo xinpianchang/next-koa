@@ -56,7 +56,7 @@ export default class AboutPage extends React.Component {
     // getInitalState fetches data both on client/server
     const state = await getInitialState(ctx)
     // { title: 'about us', homepage: '/' }
-    return state
+    return stata
   }
   render() {
     return <>
