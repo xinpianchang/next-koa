@@ -1,15 +1,15 @@
 import Link from 'next/link'
 import Head from 'next/head'
 import { NextPage } from 'next'
-import getInitState from '../../../getstate'
+import getInitState from '../../../../getstate'
 
-const About: NextPage = () => <span>
+const Test: NextPage = () => <span>
   <Head>
-    <title>about</title>
+    <title>test</title>
   </Head>
-  about us,
+  test us,
   <Link href='/'>
-    <a>home</a>
+    <a>homepage</a>
   </Link>
   <Link href='/redirect'>
     <a id='redirect'>test redirect</a>
@@ -17,9 +17,9 @@ const About: NextPage = () => <span>
   <a id='redirect2' href='/redirect'>apple</a>
 </span>
 
-About.getInitialProps = (ctx) => {
+Test.getInitialProps = (ctx) => {
   console.log(66666, ctx.query)
   return {}
 }
 
-export default About
+export default Test

@@ -17,9 +17,13 @@ declare module 'http' {
   }
 }
 
+interface renderParams { 
+  [index: string]: string | number 
+}
+
 declare module 'koa' {
   interface DefaultContext extends NextRequest {
-    render: (view: string, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
+    render: (view: string, data?: any, parsed?: UrlWithParsedQuery | null, params?: renderParams) => Promise<any>
     renderError: (error: Error | null, data?: any, parsed?: UrlWithParsedQuery) => Promise<any>
     render404: (parsed?: UrlWithParsedQuery) => Promise<any>
     renderToHTML: (view: string, data?: any) => Promise<any>
@@ -310,7 +314,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
   }
 
   // ender View 并响应到 Response
-  function render(this: Context, view: string, data?: any, parsed?: UrlWithParsedQuery) {
+  function render(this: Context, view: string, data?: any, parsed?: UrlWithParsedQuery, params?: renderParams) {
     return fixCtxUrl(this, data, parsed, (ctx, query, parsedUrl, state) => {
       if (!ctx.response._explicitStatus) {
         ctx.status = 200
@@ -318,7 +322,7 @@ export default function NextKoa(options: NextKoaOptions = {}): NextApp {
       if (isNextFetch(ctx)) {
         ctx.body = state
       } else {
-        return app.render(ctx.req, ctx.res, view, query, parsedUrl)
+        return app.render(ctx.req, ctx.res, view, Object.assign(query, params), parsedUrl)
       }
     })
   }

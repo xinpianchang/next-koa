@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import NextKoa from '../../../'
+import NextKoa from '../../../src/server/index'
 import http from 'http'
 import path from 'path'
 import Router from 'koa2-router'
@@ -22,8 +22,12 @@ app.use((ctx, next) => {
 })
 
 router.get('/ssr_redirect_about', ctx => ctx.renderRedirect('/about'))
+router.get('/aboutpage', ctx => ctx.render('/about', {},  null, ctx.params))
 
-router.get('/', ctx => ctx.render('/', { title: 'hello world' }))
+router.get('/:id/test', ctx => {
+  return ctx.render('/[id]/test' , { title: 'test' }, null, ctx.params)
+})
+router.get('/', ctx => ctx.render('/', { title: 'hello world' }, ctx.query, ctx.params))
 app.use(router)
 
 const server = http.createServer(app.callback())
