@@ -78,7 +78,7 @@
     "jest-environment-node": "^25.1.0",
     "koa": "^2.11.0",
     "koa2-router": "^2.0.1",
-    "next": "9.5.4",
+    "next": "13.5.0",
     "node-fetch": "^2.6.0",
     "prettier": "^1.19.1",
     "querystring": "^0.2.0",
@@ -103,6 +103,6 @@
   },
   "peerDependencies": {
     "koa": "^2.11.0",
-    "next": "9.5.4"
+    "next": "13.5.0"
   }
 }
